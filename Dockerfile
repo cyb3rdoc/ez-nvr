@@ -1,0 +1,21 @@
+FROM python:3.12.0a6-alpine
+
+LABEL author="cyb3rdoc" maintainer="cyb3rdoc@proton.me"
+
+RUN apk update \
+  && apk add --no-cache \
+	ffmpeg \
+  && rm -rf /var/cache/apk/*
+
+WORKDIR /app
+
+COPY ./requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY ./src /
+
+RUN cat /crontab >> /etc/crontabs/root && rm /crontab
+
+VOLUME ["/config", "/storage"]
+
+CMD crond && python /app/nvr.py
