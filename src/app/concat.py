@@ -14,20 +14,18 @@ OUTPUT_DIR = "/storage"
 
 def setup_logging():
     logging.basicConfig(filename=LOG_FILE, level=logging.DEBUG, format='%(asctime)s [%(levelname)s]: %(message)s')
-    logging.info(f"Initializing concatenation script...")
 
 def concat_videos(cam_name):
     yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
     cam_path = os.path.join(OUTPUT_DIR, cam_name)
     concat_path = os.path.join(cam_path, yesterday)
     if not os.path.exists(concat_path):
-        logging.info(f"Concat directory {concat_path} unavailable.")
-        logging.info(f"No videos found for {yesterday}...Cancelling concatenation.")
+        logging.info(f"Concat: Directory {concat_path} unavailable.")
+        logging.info(f"Concat: No videos found for {yesterday}...Cancelling concatenation.")
         sys.exit()
     input_file = os.path.join(concat_path, "files.txt")
     files = [f for f in os.listdir(concat_path) if f.endswith(".mkv")]
     mkv_files = sorted(files, key=lambda x: datetime.strptime(x, '%Y-%m-%dT%H-%M-%S.mkv'))
-    logging.info(f"Concatenating videos of {yesterday} for {cam_name}...")
     try:
         with open(input_file, "w") as f:
             for file in mkv_files:
@@ -36,19 +34,19 @@ def concat_videos(cam_name):
         cmd = f"ffmpeg -hide_banner -y -loglevel warning -f concat -safe 0 -i {input_file} -c copy {concat_path}/{cam_name}_{yesterday}.mkv"
         result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if result.returncode == 0:
-            logging.info(f"Video clips of {yesterday} for {cam_name} concatenated.")
+            logging.info(f"Concat: Video clips of {yesterday} for {cam_name} concatenated.")
         else:
-            logging.error(f"Error while concatenating video of {yesterday} for {cam_name}: {result.stderr}")
+            logging.error(f"Concat: Error while concatenating video of {yesterday} for {cam_name}: {result.stderr}")
     except Exception as e:
-        logging.error(f"Error while opening input file: {e}")
+        logging.error(f"Concat: Error while opening input file: {e}")
 
     try:
         with open(input_file, "r") as f:
             for line in f:
                 os.remove(line.strip().split("'")[1])
-            logging.info(f"Source videos of {yesterday} for {cam_name} removed.")
+            logging.info(f"Concat: Source videos of {yesterday} for {cam_name} removed.")
     except Exception as e:
-        logging.error(f"Error while removing source videos of {yesterday} for {cam_name}: {e}")
+        logging.error(f"Concat: Error while removing source videos of {yesterday} for {cam_name}: {e}")
 
 
 if __name__ == "__main__":
@@ -60,7 +58,7 @@ if __name__ == "__main__":
         except yaml.YAMLError as exc:
             logging.error(exc)
 
-    logging.info(f"Starting video concatenation for {len(cameras)} camera(s).")
+    logging.info(f"Concat: Starting video concatenation for {len(cameras)} camera(s).")
 
     for camera in cameras:
         cam_name = camera['camera_name']

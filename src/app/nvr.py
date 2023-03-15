@@ -20,7 +20,6 @@ def load_config():
 
 def setup_logging():
     logging.basicConfig(filename=LOG_FILE, level=logging.DEBUG, format='%(asctime)s [%(levelname)s]: %(message)s')
-    logging.info(f"EZ-NVR initializing...")
 
 def get_camera_path(cam_name):
     return os.path.join(OUTPUT_DIR, cam_name)
@@ -40,17 +39,17 @@ def mkdir_dest(output_path):
     try:
         if not os.path.exists(output_path):
             os.makedirs(output_path, exist_ok=True)
-            logging.info(f"Camera directory {output_path} created.")
+            logging.info(f"NVR: Camera directory {output_path} created.")
     except Exception as e:
-        logging.error(f"Error creating directory {output_path}: {e}")
+        logging.error(f"NVR: Error creating directory {output_path}: {e}")
 
 def mkdir_raw(raw_path):
     try:
         if not os.path.exists(raw_path):
             os.makedirs(raw_path, exist_ok=True)
-            logging.info(f"RAW directory {raw_path} created.")
+            logging.info(f"NVR: RAW directory {raw_path} created.")
     except Exception as e:
-        logging.error(f"Error creating directory {raw_path}: {e}")
+        logging.error(f"NVR: Error creating directory {raw_path}: {e}")
 
 def start_recording(cam_config):
     cam_name = cam_config['camera_name']
@@ -68,12 +67,12 @@ def start_recording(cam_config):
 
     try:
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        logging.info(f"Camera {cam_name} initialized...")
+        logging.info(f"NVR: Camera {cam_name} initialized...")
         return process
     except subprocess.CalledProcessError as e:
-        logging.error(f"Error starting recording: {e.output}")
+        logging.error(f"NVR: Error starting recording: {e.output}")
     except Exception as e:
-        logging.error(f"Error starting recording: {e}")
+        logging.error(f"NVR: Error starting recording: {e}")
 
 def stop_recording(process):
     process.send_signal(signal.SIGINT)
@@ -95,12 +94,13 @@ def move_completed_file(cam_name, filename):
 
 def main():
     setup_logging()
+    logging.info(f"NVR: Initializing...")
     config = load_config()
 
     camera_processes = {}
     for cam_config in config['cameras']:
         cam_name = cam_config['camera_name']
-        logging.info(f"Connecting to {cam_name} at {cam_config['camera_ip']}...")
+        logging.info(f"NVR: Connecting to {cam_name} at {cam_config['camera_ip']}...")
         process = start_recording(cam_config)
         if process:
             camera_processes[cam_name] = process
@@ -108,15 +108,15 @@ def main():
     while True:
         for cam_name, process in camera_processes.items():
             if process.poll() is not None:
-                logging.error(f"Recording for camera {cam_name} has stopped unexpectedly!")
+                logging.error(f"NVR: Recording for camera {cam_name} has stopped unexpectedly!")
                 cam_config = next((c for c in config['cameras'] if c['camera_name'] == cam_name), None)
                 if cam_config:
                     process = start_recording(cam_config)
-                    logging.info(f"Camera recording restarted for {cam_name}")
+                    logging.info(f"NVR: Camera recording restarted for {cam_name}")
                     if process:
                         camera_processes[cam_name] = process
                 else:
-                    logging.error(f"Could not find configuration for camera {cam_name}")
+                    logging.error(f"NVR: Could not find configuration for camera {cam_name}")
             # Move completed video files to date folder
             raw_path = get_raw_path(cam_name)
             for filename in os.listdir(raw_path):
