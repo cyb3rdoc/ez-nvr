@@ -79,7 +79,8 @@ def start_recording(cam_config):
                 logging.error(f"NVR: Error starting recording: {e}")
         else:
             netcheck += 1
-            logging.error(f"NVR: Waiting for network connection to {cam_ip}") if netcheck == 1
+            if netcheck == 1:
+                logging.error(f"NVR: Waiting for network connection to {cam_ip}")
         time.sleep(60)
     return process
 
