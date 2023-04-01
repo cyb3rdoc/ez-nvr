@@ -9,4 +9,4 @@ cameras:
     camera_rtsp: rtsp://192.168.1.20:554/stream1
     camera_codec: libx264
     camera_interval: 300
-video_store: 30
+video_store: 21

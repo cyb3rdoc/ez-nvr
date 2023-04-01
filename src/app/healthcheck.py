@@ -3,7 +3,7 @@
 import subprocess
 
 def check_nvr_process():
-    cmd = "ps aux | grep 'nvr.py' | grep -v grep"
+    cmd = "ps aux | grep 'nvr.py\|ffmpeg' | grep -v grep"
     try:
         output = subprocess.check_output(cmd, shell=True)
         return True

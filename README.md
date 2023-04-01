@@ -2,7 +2,7 @@
 
 This is a simple and easy Network Video Recorder (NVR) that is designed to run on cheap hardware, such as a Raspberry Pi with a hard drive. 24/7 video streams from network cameras are saved. Recorded files can be browsed using [filebrowser](https://github.com/filebrowser/filebrowser).
 
-The project is deliberately bare-bones, and configuration is done through `config.yaml` file and deplyed using docker containerization.
+The project is deliberately bare-bones, configuration is done through `config.yaml` file and deployed using docker containerization.
 
 The camera video streams are saved in 5 minute files (to prevent long periods of video loss should a file become corrupted). At 01:00 UTC, the video files for the previous day are concatenated into a single 24 hour file, and the 5 minute video files are deleted. At 02:00 UTC, the video files older than 21 days are deleted. Period of retention can be changed with `config.yaml` file.
 

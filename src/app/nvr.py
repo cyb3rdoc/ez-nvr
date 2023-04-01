@@ -22,7 +22,8 @@ def setup_logging():
     logging.basicConfig(filename=LOG_FILE, level=logging.DEBUG, format='%(asctime)s [%(levelname)s]: %(message)s')
 
 def get_camera_path(cam_name):
-    return os.path.join(OUTPUT_DIR, cam_name)
+    cam_path = os.path.join(OUTPUT_DIR, cam_name)
+    return cam_path
 
 def get_raw_path(cam_name):
     cam_path = get_camera_path(cam_name)
@@ -106,10 +107,11 @@ def main():
             camera_processes[cam_name] = process
 
     while True:
-        for cam_name, process in camera_processes.items():
+        for cam_name, process in list(camera_processes.items()):
             if process.poll() is not None:
+                del camera_processes[cam_name]
                 logging.error(f"NVR: Recording for camera {cam_name} has stopped unexpectedly!")
-                cam_config = next((c for c in config['cameras'] if c['camera_name'] == cam_name), None)
+                cam_config = next((c for c in config['cameras'] if c.get('camera_name') == cam_name), None)
                 if cam_config:
                     process = start_recording(cam_config)
                     logging.info(f"NVR: Camera recording restarted for {cam_name}")
