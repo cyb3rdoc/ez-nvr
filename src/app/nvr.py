@@ -60,6 +60,7 @@ def start_recording(cam_config):
     interval = cam_config['camera_interval']
     output_path = get_output_path(cam_name)
     raw_path = get_raw_path(cam_name)
+    netcheck = 0
 
     mkdir_dest(output_path)
     mkdir_raw(raw_path)
@@ -76,8 +77,10 @@ def start_recording(cam_config):
                 logging.error(f"NVR: Error starting recording: {e.output}")
             except Exception as e:
                 logging.error(f"NVR: Error starting recording: {e}")
+        else:
+            netcheck += 1
+            logging.error(f"NVR: Waiting for network connection to {cam_ip}") if netcheck == 1
         time.sleep(60)
-
     return process
 
 def stop_recording(process):
