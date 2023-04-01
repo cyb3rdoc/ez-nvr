@@ -71,7 +71,7 @@ def start_recording(cam_config):
             cmd = f"ffmpeg -hide_banner -y -loglevel error -rtsp_transport tcp -use_wallclock_as_timestamps 1 -i {rtsp_url} -c {codec} -f segment -reset_timestamps 1 -segment_time {interval} -segment_format mkv -segment_atclocktime 1 -strftime 1 {raw_path}/%Y-%m-%dT%H-%M-%S.mkv"
             try:
                 process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                logging.info(f"NVR: Camera {cam_name} initialized...")
+                logging.info(f"NVR: Camera {cam_name} initialized.")
                 break
             except subprocess.CalledProcessError as e:
                 logging.error(f"NVR: Error starting recording: {e.output}")
@@ -110,7 +110,7 @@ def main():
     camera_processes = {}
     for cam_config in config['cameras']:
         cam_name = cam_config['camera_name']
-        logging.info(f"NVR: Connecting to {cam_name} at {cam_config['camera_ip']}...")
+        logging.info(f"NVR: Connecting to {cam_name} at {cam_config['camera_ip']}.")
         process = start_recording(cam_config)
         if process:
             camera_processes[cam_name] = process
@@ -123,11 +123,11 @@ def main():
                 cam_config = next((c for c in config['cameras'] if c.get('camera_name') == cam_name), None)
                 if cam_config:
                     process = start_recording(cam_config)
-                    logging.info(f"NVR: Camera recording restarted for {cam_name}")
+                    logging.info(f"NVR: Camera recording restarted for {cam_name}.")
                     if process:
                         camera_processes[cam_name] = process
                 else:
-                    logging.error(f"NVR: Could not find configuration for camera {cam_name}")
+                    logging.error(f"NVR: Could not find configuration for camera {cam_name}.")
             # Move completed video files to date folder
             raw_path = get_raw_path(cam_name)
             for filename in os.listdir(raw_path):
