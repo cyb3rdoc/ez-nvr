@@ -13,13 +13,16 @@ CONFIG_FILE = "/config/config.yaml"
 LOG_FILE = "/var/log/nvr.log"
 OUTPUT_DIR = "/storage"
 
-def load_config():
-    with open(CONFIG_FILE, 'r') as f:
-        config = yaml.safe_load(f)
-    return config
-
 def setup_logging():
     logging.basicConfig(filename=LOG_FILE, level=logging.DEBUG, format='%(asctime)s [%(levelname)s]: %(message)s')
+
+def load_config():
+    with open(CONFIG_FILE, 'r') as f:
+        try:
+            config = yaml.safe_load(f)
+        except yaml.YAMLError as e:
+            logging.error(f"NVR: Error loading configuration: {e}")
+    return config
 
 def get_camera_path(cam_name):
     cam_path = os.path.join(OUTPUT_DIR, cam_name)
@@ -78,9 +81,13 @@ def start_recording(cam_config):
             except Exception as e:
                 logging.error(f"NVR: Error starting recording: {e}")
         else:
-            netcheck += 1
+            netcheck = netcheck + 1
             if netcheck == 1:
-                logging.error(f"NVR: Waiting for network connection to {cam_ip}")
+                logging.error(f"NVR: No network connection to {cam_name} at {cam_ip}")
+            if netcheck == 5:
+                logging.info(f"NVR: Waiting for network connection to {cam_name} at {cam_ip}")
+            if netcheck == 99:
+                netcheck = 5
         time.sleep(60)
     return process
 
@@ -100,7 +107,7 @@ def move_completed_file(cam_name, filename):
         try:
             shutil.move(src_path, dest_path)
         except Exception as e:
-            logging.error(f"Error moving {filename} to {dest_path}: {e}")
+            logging.error(f"NVR: Error moving {filename} to {dest_path}: {e}")
 
 def main():
     setup_logging()
