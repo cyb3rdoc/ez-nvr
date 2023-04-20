@@ -2,16 +2,18 @@
 
 import subprocess
 
-def check_nvr_process():
-    cmd = "ps aux | grep 'nvr.py\|ffmpeg' | grep -v grep"
+def eznvr_health():
+    cmd_nvr = "ps aux | grep 'nvr.py' | grep -v grep"
+    cmd_ffmpeg = "ps aux | grep 'ffmpeg' | grep -v grep"
     try:
-        output = subprocess.check_output(cmd, shell=True)
+        output_nvr = subprocess.check_output(cmd_nvr, shell=True)
+        output_ffmpeg = subprocess.check_output(cmd_ffmpeg, shell=True)
         return True
     except subprocess.CalledProcessError:
         return False
 
 def main():
-    if check_nvr_process():
+    if eznvr_health():
         return "OK"
     else:
         return "ERROR"
