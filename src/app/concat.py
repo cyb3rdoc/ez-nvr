@@ -3,25 +3,13 @@
 import os
 import sys
 import time
-from datetime import datetime, timedelta
-import yaml
 import subprocess
 import logging
-
-CONFIG_FILE = "/config/config.yaml"
-LOG_FILE = "/var/log/nvr.log"
-OUTPUT_DIR = "/storage"
-
-def setup_logging():
-    logging.basicConfig(filename=LOG_FILE, level=logging.DEBUG, format='%(asctime)s [%(levelname)s]: %(message)s')
-
-def load_config():
-    with open(CONFIG_FILE, 'r') as f:
-        try:
-            config = yaml.safe_load(f)
-        except yaml.YAMLError as e:
-            logging.error(f"Concat: Error loading configuration: {e}")
-    return config
+from datetime import datetime, timedelta
+from nvr import CONFIG_FILE, LOG_FILE, OUTPUT_DIR
+from utils.args import get_args
+from utils.logger import setup_logging
+from utils.config import load_config
 
 def is_valid_filename(filename):
     try:
@@ -61,16 +49,20 @@ def concat_videos(cam_name):
         with open(input_file, "r") as f:
             for line in f:
                 os.remove(line.strip().split("'")[1])
-            logging.info(f"Concat: Video clip sections of {yesterday} for {cam_name} removed.")
+            logging.debug(f"Concat: Video clip sections of {yesterday} for {cam_name} removed.")
     except Exception as e:
         logging.error(f"Concat: Error while removing video clips of {yesterday} for {cam_name}: {e}")
 
 
 def main():
-    setup_logging()
+    # parse command line arguments
+    args = get_args()
+    # set up logging
+    setup_logging(debug=args.debug)
+    # load user configuration from config.yaml file
     config = load_config()
     cameras = config['cameras']
-    logging.info(f"Concat: Starting video concatenation for {len(cameras)} camera(s).")
+    logging.debug(f"Concat: Starting video concatenation for {len(cameras)} camera(s).")
     for camera in cameras:
         cam_name = camera['camera_name']
         concat_videos(cam_name)

@@ -1,28 +1,16 @@
 #!/usr/bin/env python
 
 import os
-from datetime import datetime, timedelta
-import shutil
-import yaml
 import logging
-
-CONFIG_FILE = "/config/config.yaml"
-LOG_FILE = "/var/log/nvr.log"
-OUTPUT_DIR = "/storage"
-
-def setup_logging():
-    logging.basicConfig(filename=LOG_FILE, level=logging.DEBUG, format='%(asctime)s [%(levelname)s]: %(message)s')
-
-def load_config():
-    with open(CONFIG_FILE, 'r') as f:
-        try:
-            config = yaml.safe_load(f)
-        except yaml.YAMLError as e:
-            logging.error(f"Deletion: Error loading configuration: {e}")
-    return config
+import shutil
+from datetime import datetime, timedelta
+from nvr import CONFIG_FILE, LOG_FILE, OUTPUT_DIR
+from utils.args import get_args
+from utils.logger import setup_logging
+from utils.config import load_config
 
 def delete_old_folders(config):
-    days_to_subtract = config.get("video_store", 21)
+    days_to_subtract = config.get("video_store", 15)
     cameras = config.get("cameras", [])
 
     for camera in cameras:
@@ -42,9 +30,13 @@ def delete_old_folders(config):
             logging.info(f"Deletion: {camera_folder_path} not found.")
 
 def main():
-    setup_logging()
+    # parse command line arguments
+    args = get_args()
+    # set up logging
+    setup_logging(debug=args.debug)
+    # load user configuration from config.yaml file
     config = load_config()
-    logging.info(f"Deletion: Initializing deletion of old directories...")
+    logging.debug(f"Deletion: Initializing deletion of old directories...")
     delete_old_folders(config)
 
 if __name__ == "__main__":
