@@ -2,7 +2,7 @@ import os
 import yaml
 
 # read environment variables
-CONFIG_FILE = os.environ['CONFIG_FILE']
+CONFIG_FILE = os.environ.get('CONFIG_FILE', '/config/config.yaml')
 
 def load_config():
     with open(CONFIG_FILE, 'r') as f:

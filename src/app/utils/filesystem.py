@@ -5,7 +5,7 @@ import shutil
 from datetime import datetime, timedelta
 
 # read environment variables
-OUTPUT_DIR = os.environ['OUTPUT_DIR']
+OUTPUT_DIR = os.environ.get('OUTPUT_DIR', '/storage')
 
 def get_camera_path(cam_name):
     cam_path = os.path.join(OUTPUT_DIR, cam_name)

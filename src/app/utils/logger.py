@@ -2,7 +2,7 @@ import os
 import logging
 
 # read environment variables
-LOG_FILE = os.environ['LOG_FILE']
+LOG_FILE = os.environ.get('LOG_FILE', '/var/log/nvr.log')
 
 def setup_logging(debug=False):
     if debug:

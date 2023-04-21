@@ -4,7 +4,13 @@ import os
 import logging
 import shutil
 from datetime import datetime, timedelta
-from nvr import CONFIG_FILE, LOG_FILE, OUTPUT_DIR
+
+# read environment variables
+CONFIG_FILE = os.environ.get('CONFIG_FILE', '/config/config.yaml')
+LOG_FILE = os.environ.get('LOG_FILE', '/var/log/nvr.log')
+OUTPUT_DIR = os.environ.get('OUTPUT_DIR', '/storage')
+
+# import eznvr modules and utilities
 from utils.args import get_args
 from utils.logger import setup_logging
 from utils.config import load_config
