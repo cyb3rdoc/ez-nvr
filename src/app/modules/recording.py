@@ -37,11 +37,11 @@ def start_recording(cam_config):
     try:
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         logging.info(f"NVR: Camera {cam_name} initialized.")
+        return process
     except subprocess.CalledProcessError as e:
         logging.error(f"NVR: Error starting recording: {e.output}")
     except Exception as e:
         logging.error(f"NVR: Error starting recording: {e}")
-    return process
 
 def stop_recording(process):
     process.send_signal(signal.SIGINT)
