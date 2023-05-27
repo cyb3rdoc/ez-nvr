@@ -17,19 +17,12 @@ def start_recording(cam_config):
     # create necessary directories
     mkdir_dest(output_path)
     mkdir_raw(raw_path)
-
+    # check connectivity to camera
     while True:
         response = os.system("ping -c 1 " + cam_ip)
         if response == 0:
-            cmd = f"ffmpeg -hide_banner -y -loglevel error -rtsp_transport tcp -use_wallclock_as_timestamps 1 -i {rtsp_url} -c {codec} -f segment -reset_timestamps 1 -segment_time {interval} -segment_format mkv -segment_atclocktime 1 -strftime 1 {raw_path}/%Y-%m-%dT%H-%M-%S.mkv"
-            try:
-                process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                logging.info(f"NVR: Camera {cam_name} initialized.")
-                break
-            except subprocess.CalledProcessError as e:
-                logging.error(f"NVR: Error starting recording: {e.output}")
-            except Exception as e:
-                logging.error(f"NVR: Error starting recording: {e}")
+            logging.info(f"NVR: Connection established to {cam_name} at {cam_ip}")
+            break
         else:
             netcheck = netcheck + 1
             if netcheck == 1:
@@ -39,6 +32,15 @@ def start_recording(cam_config):
             if netcheck == 99:
                 netcheck = 5
         time.sleep(60)
+    # initialize camera and start recording
+    cmd = f"ffmpeg -hide_banner -y -loglevel error -rtsp_transport tcp -use_wallclock_as_timestamps 1 -i {rtsp_url} -c {codec} -f segment -reset_timestamps 1 -segment_time {interval} -segment_format mkv -segment_atclocktime 1 -strftime 1 {raw_path}/%Y-%m-%dT%H-%M-%S.mkv"
+    try:
+        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        logging.info(f"NVR: Camera {cam_name} initialized.")
+    except subprocess.CalledProcessError as e:
+        logging.error(f"NVR: Error starting recording: {e.output}")
+    except Exception as e:
+        logging.error(f"NVR: Error starting recording: {e}")
     return process
 
 def stop_recording(process):
