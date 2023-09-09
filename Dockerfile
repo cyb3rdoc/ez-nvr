@@ -1,4 +1,4 @@
-FROM python:3.12.0b1-alpine
+FROM python:3.12.0rc2-alpine
 
 LABEL author="cyb3rdoc" maintainer="cyb3rdoc@proton.me"
 

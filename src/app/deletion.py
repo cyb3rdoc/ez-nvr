@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import os
-import logging
 import shutil
 from datetime import datetime, timedelta
 
@@ -12,8 +11,9 @@ OUTPUT_DIR = os.environ.get('OUTPUT_DIR', '/storage')
 
 # import eznvr modules and utilities
 from utils.args import get_args
-from utils.logger import setup_logging
+from utils.logger import setup_logging, log_info, log_debug
 from utils.config import load_config
+
 
 def delete_old_folders(config):
     days_to_subtract = config.get("video_store", 15)
@@ -31,9 +31,10 @@ def delete_old_folders(config):
         camera_folder_path = os.path.join(folder_path, date_folder_name)
         if os.path.exists(camera_folder_path):
             shutil.rmtree(camera_folder_path)
-            logging.info(f"Deletion: {camera_folder_path} found and removed.")
+            log_info(f"Deletion: {camera_folder_path} found and removed.")
         else:
-            logging.info(f"Deletion: {camera_folder_path} not found.")
+            log_info(f"Deletion: {camera_folder_path} not found.")
+
 
 def main():
     # parse command line arguments
@@ -42,8 +43,9 @@ def main():
     setup_logging(debug=args.debug)
     # load user configuration from config.yaml file
     config = load_config()
-    logging.debug(f"Deletion: Initializing deletion of old directories...")
+    log_debug("Deletion: Initializing deletion of old directories...")
     delete_old_folders(config)
+
 
 if __name__ == "__main__":
     main()
