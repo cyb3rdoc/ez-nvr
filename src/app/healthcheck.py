@@ -4,13 +4,10 @@ import subprocess
 import os
 
 
-def process_health():
-    cmd_nvr = "ps aux | grep 'nvr.py' | grep -v grep"
-    cmd_ffmpeg = "ps aux | grep 'ffmpeg' | grep -v grep"
+def process_state(process_name):
     try:
-        output_nvr = subprocess.check_output(cmd_nvr, shell=True)
-        output_ffmpeg = subprocess.check_output(cmd_ffmpeg, shell=True)
-        return True
+        output = subprocess.check_output(["pgrep", process_name])
+        return len(output.strip()) > 0
     except subprocess.CalledProcessError:
         return False
 
@@ -24,7 +21,9 @@ def nvr_health():
 
 
 def main():
-    if process_health() and nvr_health():
+    nvr_process = process_state("python")
+    ffmpeg_process = process_state("ffmpeg")
+    if nvr_process and ffmpeg_process and nvr_health():
         return "OK"
     else:
         return "ERROR"
