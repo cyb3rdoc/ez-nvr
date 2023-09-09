@@ -17,10 +17,10 @@ def process_health():
 
 def nvr_health():
     health_state = os.environ.get('HEALTH_STATE', 'false')
-    if health_state.lower() == 'true':
-        return True
-    else:
+    if health_state.lower() == 'false':
         return False
+    else:
+        return True
 
 
 def main():
