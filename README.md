@@ -34,14 +34,14 @@ Mount following volumes to update camera settings and access or backup stored vi
 
 ## Using docker-compose.yml
 
-You can also use prebuilt image cyb3rdoc/eznvr:dev (developmental image) with docker-compose.yml.
+You can also use prebuilt image cyb3rdoc/eznvr:latest (`dev` tag for developmental image) with docker-compose.yml.
 ```
 version: '3.6'
 services:
   eznvr:
     container_name: eznvr
     hostname: eznvr
-    image: cyb3rdoc/eznvr:dev
+    image: cyb3rdoc/eznvr:latest
     volumes:
       - /path/to/eznvr/config:/config
       - /path/to/eznvr/storage:/storage

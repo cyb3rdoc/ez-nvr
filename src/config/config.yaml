@@ -1,12 +1,12 @@
 cameras:
-  - camera_name: Camera1
-    camera_ip: 192.168.1.10
-    camera_rtsp: rtsp://192.168.1.10:554/stream1
-    camera_codec: copy
-    camera_interval: 300
-  - camera_name: Camera2
-    camera_ip: 192.168.1.20
-    camera_rtsp: rtsp://192.168.1.20:554/stream1
-    camera_codec: libx264
-    camera_interval: 300
-video_store: 21
+  - camera_name: "Camera1"
+    camera_ip: "192.168.1.10"
+    camera_rtsp: "rtsp://192.168.1.10:554/stream1"
+    camera_codec: "copy"
+    camera_interval: "300"
+  - camera_name: "Camera2"
+    camera_ip: "192.168.1.20"
+    camera_rtsp: "rtsp://192.168.1.20:554/stream1"
+    camera_codec: "libx264"
+    camera_interval: "300"
+video_store: "21"

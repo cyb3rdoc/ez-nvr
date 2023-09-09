@@ -7,10 +7,13 @@ from utils.logger import log_error
 CONFIG_FILE = os.environ.get('CONFIG_FILE', '/config/config.yaml')
 
 
-def sanitize_input(input_str):
-    # Sanitize input by escaping special characters
-    sanitized_input = shlex.quote(input_str)
-    return sanitized_input
+def sanitize_input(input_value):
+    if isinstance(input_value, str):
+        return shlex.quote(input_value)
+    elif isinstance(input_value, (int, float)):
+        return shlex.quote(str(input_value))
+    else:
+        return input_value
 
 
 def sanitize_config(config):

@@ -3,7 +3,7 @@ services:
   eznvr:
     container_name: eznvr
     hostname: eznvr
-    image: cyb3rdoc/eznvr:dev
+    image: cyb3rdoc/eznvr:latest
     volumes:
       - /path/to/eznvr/config:/config
       - /path/to/eznvr/storage:/storage
