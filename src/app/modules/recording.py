@@ -1,11 +1,12 @@
 import os
 import time
-import logging
 import subprocess
-import signal
 from utils.filesystem import get_output_path, get_raw_path, mkdir_dest, mkdir_raw
+from utils.logger import log_info, log_error
+from utils.common import stop_flags, stop_flags_lock
 
-def start_recording(cam_config):
+
+def start_recording(cam_config, stop_flag):
     cam_name = cam_config['camera_name']
     cam_ip = cam_config['camera_ip']
     rtsp_url = cam_config['camera_rtsp']
@@ -19,30 +20,39 @@ def start_recording(cam_config):
     mkdir_raw(raw_path)
     # check connectivity to camera
     while True:
+        # Check the stop flag periodically and exit if it's set
+        if stop_flag.is_set():
+            break
+
         response = os.system("ping -c 1 " + cam_ip)
         if response == 0:
-            logging.info(f"NVR: Connection established to {cam_name} at {cam_ip}")
+            log_info(f"NVR: Connection established to {cam_name} at {cam_ip}")
             break
         else:
             netcheck = netcheck + 1
             if netcheck == 1:
-                logging.error(f"NVR: No network connection to {cam_name} at {cam_ip}")
+                log_error(f"NVR: No connection to {cam_name} at {cam_ip}")
             if netcheck == 5:
-                logging.info(f"NVR: Waiting for network connection to {cam_name} at {cam_ip}")
+                log_info(f"NVR: Waiting for connection to {cam_name} at {cam_ip}")
             if netcheck == 99:
-                netcheck = 5
+                netcheck = 4
         time.sleep(60)
     # initialize camera and start recording
-    cmd = f"ffmpeg -hide_banner -y -loglevel error -rtsp_transport tcp -use_wallclock_as_timestamps 1 -i {rtsp_url} -c {codec} -f segment -reset_timestamps 1 -segment_time {interval} -segment_format mkv -segment_atclocktime 1 -strftime 1 {raw_path}/%Y-%m-%dT%H-%M-%S.mkv"
-    try:
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        logging.info(f"NVR: Camera {cam_name} initialized.")
-        return process
-    except subprocess.CalledProcessError as e:
-        logging.error(f"NVR: Error starting recording: {e.output}")
-    except Exception as e:
-        logging.error(f"NVR: Error starting recording: {e}")
+    cmd = f"ffmpeg -hide_banner -y -loglevel error -rtsp_transport tcp -use_wallclock_as_timestamps 1 -i \"{rtsp_url}\" -c {codec} -f segment -reset_timestamps 1 -segment_time {interval} -segment_format mkv -segment_atclocktime 1 -strftime 1 {raw_path}/%Y-%m-%dT%H-%M-%S.mkv"
+    while not stop_flag.is_set():
+        try:
+            process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            log_info(f"NVR: Camera {cam_name} initialized.")
+            return process
+        except subprocess.CalledProcessError as e:
+            log_error(f"NVR: Error starting recording: {e.output}")
+        except Exception as e:
+            log_error(f"NVR: Error starting recording: {e}")
 
-def stop_recording(process):
-    process.send_signal(signal.SIGINT)
-    process.wait()
+
+def stop_recording(cam_name):
+    with stop_flags_lock:
+        if cam_name in stop_flags:
+            stop_flags[cam_name].set()
+        else:
+            log_error(f"NVR: Camera {cam_name} not found in stop_flags.")
