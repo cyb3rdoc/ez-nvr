@@ -31,11 +31,11 @@ def start_recording(cam_config, stop_flag):
         else:
             netcheck = netcheck + 1
             if netcheck == 1:
-                log_error(f"NVR: No network connection to {cam_name} at {cam_ip}")
+                log_error(f"NVR: No connection to {cam_name} at {cam_ip}")
             if netcheck == 5:
-                log_info(f"NVR: Waiting for network connection to {cam_name} at {cam_ip}")
+                log_info(f"NVR: Waiting for connection to {cam_name} at {cam_ip}")
             if netcheck == 99:
-                netcheck = 5
+                netcheck = 4
         time.sleep(60)
     # initialize camera and start recording
     cmd = f"ffmpeg -hide_banner -y -loglevel error -rtsp_transport tcp -use_wallclock_as_timestamps 1 -i \"{rtsp_url}\" -c {codec} -f segment -reset_timestamps 1 -segment_time {interval} -segment_format mkv -segment_atclocktime 1 -strftime 1 {raw_path}/%Y-%m-%dT%H-%M-%S.mkv"
