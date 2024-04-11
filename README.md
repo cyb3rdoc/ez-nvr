@@ -5,7 +5,7 @@
 [![Size](https://img.shields.io/docker/image-size/cyb3rdoc/eznvr/latest?sort=semver&labelColor-555555&color-007EC6&style=flat-square)](https://hub.docker.com/r/cyb3rdoc/eznvr)
 [![Pulls](https://img.shields.io/docker/pulls/cyb3rdoc/eznvr?labelColor-555555&color-007EC6&style=flat-square)](https://hub.docker.com/r/cyb3rdoc/eznvr)
 
-This is a simple and easy Network Video Recorder (NVR) that is designed to run on cheap hardware, such as a Raspberry Pi with a hard drive. 24/7 video streams from network cameras are saved. Recorded files can be browsed using [filebrowser](https://github.com/filebrowser/filebrowser).
+This is a simple, lightweight and easy Network Video Recorder (NVR) that is designed to run on cheap hardware, such as a Raspberry Pi with a hard drive. 24/7 video streams from network cameras are saved. Recorded files can be browsed using [filebrowser](https://github.com/filebrowser/filebrowser).
 
 The project is deliberately bare-bones, configuration is done through `config.yaml` file and deployed using docker containerization.
 
@@ -51,3 +51,10 @@ services:
 
 ## NVR Logs
 Logs are saved in /var/log/nvr.log file. This can be accessed with `docker exec -it eznvr cat /var/log/nvr.log` OR viewed live with `docker exec -it eznvr tail -F /var/log/nvr.log`
+
+## Configuration Options
+1. Use `TZ: Europe/London` environment variable to have filenames in local timezone of London.
+2. Disable concatenation of short video clips to single video file by setting `concatenation: false` in `config.yaml` file.
+3. Set retention period of video files by updating `video_store: 21` to your desired days in `config.yaml` file.
+4. For password protected RTSP streams, you need pass the argument in RTSP URL configuration based on your camera. E.g., rtsp://user:password@camera-ip/live/stream_01
+5. If you need logs in native docker logs, use `RUN ln -sf /dev/stdout /var/log/nvr.log` in Dockerfile before creating the image.
