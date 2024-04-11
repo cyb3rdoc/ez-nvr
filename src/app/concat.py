@@ -16,6 +16,14 @@ from utils.logger import setup_logging, log_info, log_error, log_debug
 from utils.config import load_config
 
 
+def concat_enabled():
+    concat_config = config.get("concatenation", true)
+    if concat_config.lower() == 'false':
+        return False
+    else:
+        return True
+
+
 def is_valid_filename(filename):
     try:
         datetime.strptime(filename[:-4], '%Y-%m-%dT%H-%M-%S')
@@ -67,6 +75,8 @@ def main():
     setup_logging(debug=args.debug)
     # load user configuration from config.yaml file
     config = load_config()
+    if not concat_enabled():
+        exit(0)
     cameras = config['cameras']
     log_debug(f"Concat: Starting video concatenation for {len(cameras)} camera(s).")
     for camera in cameras:

@@ -10,3 +10,4 @@ cameras:
     camera_codec: libx264
     camera_interval: 300
 video_store: 21
+concatenation: true
