@@ -44,7 +44,7 @@ def start_recording(cam_config, stop_flag):
     cmd = f"ffmpeg -hide_banner -y -loglevel error -rtsp_transport tcp -use_wallclock_as_timestamps 1 -i \"{rtsp_url}\" -c {codec} -f segment -reset_timestamps 1 -segment_time {interval} -segment_format mkv -segment_atclocktime 1 -strftime 1 {raw_path}/%Y-%m-%dT%H-%M-%S.mkv"
     while not stop_flag.is_set():
         try:
-            log_info(f"NVR: Starting recording for {cam_name} at {rtsp_url}")
+            log_debug(f"NVR: Starting recording for {cam_name} at {rtsp_url}")
             process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             log_info(f"NVR: Camera {cam_name} initialized.")
             # Track the process
@@ -70,7 +70,7 @@ def stop_recording(cam_name):
             process = camera_processes[cam_name]
             # Check if the process is still alive
             if process.poll() is None:
-                log_info(f"NVR: Stopping ffmpeg process for {cam_name}.")
+                log_debug(f"NVR: Stopping ffmpeg process for {cam_name}.")
                 process.terminate() # Gracefully terminate ffmpeg
                 process.wait() # Wait for process to terminate
                 del camera_processes[cam_name] # Clean up the process dictionary
