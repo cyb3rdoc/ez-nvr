@@ -24,12 +24,8 @@ def sanitize_input(input_value):
 def sanitize_config(config):
     sanitized_config = config.copy()
     for camera_config in sanitized_config.get('cameras', []):
-        # Sanitize user inputs in camera configurations
+        # Sanitize user inputs in camera_name field
         camera_config['camera_name'] = sanitize_input(camera_config.get('camera_name', ''))
-        camera_config['camera_ip'] = sanitize_input(camera_config.get('camera_ip', ''))
-        camera_config['camera_rtsp'] = sanitize_input(camera_config.get('camera_rtsp', ''))
-        camera_config['camera_codec'] = sanitize_input(camera_config.get('camera_codec', ''))
-        camera_config['camera_interval'] = sanitize_input(camera_config.get('camera_interval', ''))
     return sanitized_config
 
 
