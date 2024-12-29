@@ -1,6 +1,7 @@
 import os
 import yaml
-import shlex
+import re
+import unicodedata
 from utils.logger import log_error
 
 # read environment variables
@@ -9,9 +10,13 @@ CONFIG_FILE = os.environ.get('CONFIG_FILE', '/config/config.yaml')
 
 def sanitize_input(input_value):
     if isinstance(input_value, str):
-        return shlex.quote(input_value)
+        # Normalize the string to remove accents
+        input_value = unicodedata.normalize('NFKD', input_value).encode('ascii', 'ignore').decode('ascii')
+        # Replace any non-alphanumeric characters (including spaces) with underscores
+        input_value = re.sub(r'[^a-zA-Z0-9_]', '_', input_value)
+        return input_value
     elif isinstance(input_value, (int, float)):
-        return shlex.quote(str(input_value))
+        return str(input_value)
     else:
         return input_value
 
@@ -19,12 +24,8 @@ def sanitize_input(input_value):
 def sanitize_config(config):
     sanitized_config = config.copy()
     for camera_config in sanitized_config.get('cameras', []):
-        # Sanitize user inputs in camera configurations
+        # Sanitize user inputs in camera_name field
         camera_config['camera_name'] = sanitize_input(camera_config.get('camera_name', ''))
-        camera_config['camera_ip'] = sanitize_input(camera_config.get('camera_ip', ''))
-        camera_config['camera_rtsp'] = sanitize_input(camera_config.get('camera_rtsp', ''))
-        camera_config['camera_codec'] = sanitize_input(camera_config.get('camera_codec', ''))
-        camera_config['camera_interval'] = sanitize_input(camera_config.get('camera_interval', ''))
     return sanitized_config
 
 
