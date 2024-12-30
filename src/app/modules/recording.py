@@ -2,7 +2,7 @@ import os
 import time
 import subprocess
 from utils.filesystem import get_output_path, get_raw_path, mkdir_dest, mkdir_raw
-from utils.logger import log_info, log_error
+from utils.logger import log_info, log_error, log_debug
 from utils.common import stop_flags, stop_flags_lock
 
 
