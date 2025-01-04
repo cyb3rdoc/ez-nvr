@@ -17,11 +17,7 @@ from utils.config import load_config
 
 
 def concat_enabled():
-    concat_config = config.get("concatenation", true)
-    if concat_config.lower() == 'false':
-        return False
-    else:
-        return True
+    return config.get("concatenation", True)
 
 
 def is_valid_filename(filename):
@@ -75,7 +71,8 @@ def main():
     setup_logging(debug=args.debug)
     # load user configuration from config.yaml file
     config = load_config()
-    if not concat_enabled():
+    if not concat_enabled(config):
+        log_debug("Concat: Concatenation disabled in config")
         exit(0)
     cameras = config['cameras']
     log_debug(f"Concat: Starting video concatenation for {len(cameras)} camera(s).")
