@@ -31,9 +31,9 @@ def delete_old_folders(config):
         camera_folder_path = os.path.join(folder_path, date_folder_name)
         if os.path.exists(camera_folder_path):
             shutil.rmtree(camera_folder_path)
-            log_info(f"Deletion: {camera_folder_path} found and removed.")
+            log_info(f"Deletion: {camera_folder_path} found and removed")
         else:
-            log_info(f"Deletion: {camera_folder_path} not found.")
+            log_info(f"Deletion: {camera_folder_path} not found")
 
 
 def main():
@@ -43,7 +43,7 @@ def main():
     setup_logging(debug=args.debug)
     # load user configuration from config.yaml file
     config = load_config()
-    log_debug("Deletion: Initializing deletion of old directories...")
+    log_debug("Deletion: Initializing deletion of old directories")
     delete_old_folders(config)
 
 

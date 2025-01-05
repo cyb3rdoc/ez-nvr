@@ -30,7 +30,7 @@ def mkdir_dest(output_path):
     try:
         if not os.path.exists(output_path):
             os.makedirs(output_path, exist_ok=True)
-            log_debug(f"NVR: Camera directory {output_path} created.")
+            log_debug(f"NVR: Camera directory {output_path} created")
     except Exception as e:
         log_error(f"NVR: Error creating directory {output_path}: {e}")
 
@@ -39,7 +39,7 @@ def mkdir_raw(raw_path):
     try:
         if not os.path.exists(raw_path):
             os.makedirs(raw_path, exist_ok=True)
-            log_debug(f"NVR: RAW directory {raw_path} created.")
+            log_debug(f"NVR: RAW directory {raw_path} created")
     except Exception as e:
         log_error(f"NVR: Error creating directory {raw_path}: {e}")
 

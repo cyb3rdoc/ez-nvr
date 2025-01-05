@@ -38,7 +38,7 @@ def main():
     camera_threads = {}
     for cam_config in config['cameras']:
         cam_name = cam_config['camera_name']
-        log_info(f"NVR: Connecting to {cam_name} at {cam_config['camera_ip']}.")
+        log_info(f"NVR: Connecting to {cam_name} at {cam_config['camera_ip']}")
         stop_flag = threading.Event()
         thread = Thread(target=start_recording, args=(cam_config, stop_flag))
         thread.start()
@@ -69,9 +69,9 @@ def main():
                     camera_threads[cam_name] = thread
                     with stop_flags_lock:
                         stop_flags[cam_name] = stop_flag
-                    log_info(f"NVR: Recording restarted for camera {cam_name}.")
+                    log_info(f"NVR: Recording restarted for camera {cam_name}")
                 else:
-                    log_error(f"NVR: Could not find configuration for camera {cam_name}.")
+                    log_error(f"NVR: Could not find configuration for camera {cam_name}")
             else:
                 os.environ['HEALTH_STATE'] = "true"
         time.sleep(60)

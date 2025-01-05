@@ -64,20 +64,20 @@ def stop_recording(cam_name):
         if cam_name in stop_flags:
             stop_flags[cam_name].set()
         else:
-            log_error(f"NVR: Camera {cam_name} not found in stop_flags.")
+            log_error(f"NVR: Camera {cam_name} not found in stop_flags")
         # Check if the process is still running before terminating it
         if cam_name in camera_processes:
             process = camera_processes[cam_name]
             # Check if the process is still alive
             if process.poll() is None:
-                log_debug(f"NVR: Stopping ffmpeg process for {cam_name}.")
+                log_debug(f"NVR: Stopping ffmpeg process for {cam_name}")
                 process.terminate() # Gracefully terminate ffmpeg
                 process.wait() # Wait for process to terminate
                 del camera_processes[cam_name] # Clean up the process dictionary
-                log_info(f"NVR: Stopped ffmpeg process for {cam_name}.")
+                log_info(f"NVR: Stopped ffmpeg process for {cam_name}")
             else:
                 # The ffmpeg process has crashed or already exited
-                log_error(f"NVR: ffmpeg for {cam_name} has already crashed or terminated unexpectedly.")
+                log_error(f"NVR: ffmpeg for {cam_name} has already crashed or terminated unexpectedly")
                 del camera_processes[cam_name]  # Clean up the process dictionary
         else:
-            log_error(f"NVR: No ffmpeg process found for {cam_name}.")
+            log_error(f"NVR: No ffmpeg process found for {cam_name}")
