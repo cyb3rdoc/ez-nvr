@@ -15,7 +15,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY ./src /
 
 RUN cat /crontab >> /etc/crontabs/root && rm /crontab
-RUN ln -sf /dev/stdout /var/log/nvr.log
 
 VOLUME ["/config", "/storage"]
 

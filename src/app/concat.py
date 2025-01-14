@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 
 # read environment variables
 CONFIG_FILE = os.environ.get('CONFIG_FILE', '/config/config.yaml')
-LOG_FILE = os.environ.get('LOG_FILE', '/var/log/nvr.log')
 OUTPUT_DIR = os.environ.get('OUTPUT_DIR', '/storage')
 
 # import eznvr modules and utilities
@@ -51,7 +50,7 @@ def concat_videos(cam_name):
             for file in mkv_files:
                 f.write("file '{}'\n".format(os.path.join(concat_path, file)))
 
-        cmd = f"ffmpeg -hide_banner -y -loglevel warning -f concat -safe 0 -i {input_file} -c copy {concat_path}/{cam_name}_{yesterday}.mkv"
+        cmd = f"ffmpeg -hide_banner -y -loglevel warning -read_ahead_cache_size 4096 -f concat -safe 0 -i {input_file} -c copy -max_muxing_queue_size 1024 {concat_path}/{cam_name}_{yesterday}.mkv"
         log_debug(f"Concat: Running command: {cmd}")
 
         result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)

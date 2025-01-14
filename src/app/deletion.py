@@ -6,7 +6,6 @@ from datetime import datetime, timedelta
 
 # read environment variables
 CONFIG_FILE = os.environ.get('CONFIG_FILE', '/config/config.yaml')
-LOG_FILE = os.environ.get('LOG_FILE', '/var/log/nvr.log')
 OUTPUT_DIR = os.environ.get('OUTPUT_DIR', '/storage')
 
 # import eznvr modules and utilities

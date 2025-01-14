@@ -7,13 +7,11 @@ import threading
 
 # set environment variables
 os.environ['CONFIG_FILE'] = "/config/config.yaml"
-os.environ['LOG_FILE'] = "/var/log/nvr.log"
 os.environ['OUTPUT_DIR'] = "/storage"
 os.environ['HEALTH_STATE'] = "false"
 
 # read environment variables
 CONFIG_FILE = os.environ.get('CONFIG_FILE', '/config/config.yaml')
-LOG_FILE = os.environ.get('LOG_FILE', '/var/log/nvr.log')
 OUTPUT_DIR = os.environ.get('OUTPUT_DIR', '/storage')
 
 # import eznvr modules and utilities
