@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 
 # read environment variables
 CONFIG_FILE = os.environ.get('CONFIG_FILE', '/config/config.yaml')
-LOG_FILE = os.environ.get('LOG_FILE', '/var/log/nvr.log')
 OUTPUT_DIR = os.environ.get('OUTPUT_DIR', '/storage')
 
 # import eznvr modules and utilities
@@ -15,14 +14,12 @@ from utils.args import get_args
 from utils.logger import setup_logging, log_info, log_error, log_debug
 from utils.config import load_config
 
-
 def is_valid_filename(filename):
     try:
         datetime.strptime(filename[:-4], '%Y-%m-%dT%H-%M-%S')
         return True
     except ValueError:
         return False
-
 
 def concat_videos(cam_name):
     yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
@@ -59,7 +56,6 @@ def concat_videos(cam_name):
     except Exception as e:
         log_error(f"Concat: Error while removing video clips of {yesterday} for {cam_name}: {e}")
 
-
 def main():
     # parse command line arguments
     args = get_args()
@@ -72,7 +68,6 @@ def main():
     for camera in cameras:
         cam_name = camera['camera_name']
         concat_videos(cam_name)
-
 
 if __name__ == "__main__":
     main()

@@ -13,6 +13,14 @@ The camera video streams are saved in 5 minute files (to prevent long periods of
 
 `ffmpeg` is used to connect to the camera streams and save the video feeds. Recording will restart automatically in case of unexpected interruption.
 
+## Configuration Options
+
+1. Use `TZ: Europe/London` environment variable to have filenames in local timezone of London.
+2. Set retention period of video files by updating `video_store: 21` to your desired days in `config.yaml` file. (Optional)
+3. For password protected RTSP streams, you need pass the argument in RTSP URL configuration based on your camera. E.g., rtsp://user:password@camera-ip/live/stream_01
+4. Length of video clip sections can be changed by updating `camera_interval: 300` to desired value. (Optional)
+5. Logs can be accessed in native docker logs.
+
 ## Build image using Dockerfile
 
 Clone the repo to build your own image.
@@ -36,7 +44,6 @@ Mount following volumes to update camera settings and access or backup stored vi
 
 You can also use prebuilt image cyb3rdoc/eznvr:latest (`dev` tag for developmental image) with docker-compose.yml.
 ```
-version: '3.6'
 services:
   eznvr:
     container_name: eznvr
@@ -50,4 +57,4 @@ services:
 ```
 
 ## NVR Logs
-Logs are saved in /var/log/nvr.log file. This can be accessed with `docker exec -it eznvr cat /var/log/nvr.log` OR viewed live with `docker exec -it eznvr tail -F /var/log/nvr.log`
+Logs can be accessed with `docker logs eznvr`. For detailed logs, use docker environment variable `DEBUG=true` in docker command or docker-compose.yml file.

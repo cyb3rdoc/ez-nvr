@@ -7,13 +7,11 @@ import threading
 
 # set environment variables
 os.environ['CONFIG_FILE'] = "/config/config.yaml"
-os.environ['LOG_FILE'] = "/var/log/nvr.log"
 os.environ['OUTPUT_DIR'] = "/storage"
 os.environ['HEALTH_STATE'] = "false"
 
 # read environment variables
 CONFIG_FILE = os.environ.get('CONFIG_FILE', '/config/config.yaml')
-LOG_FILE = os.environ.get('LOG_FILE', '/var/log/nvr.log')
 OUTPUT_DIR = os.environ.get('OUTPUT_DIR', '/storage')
 
 # import eznvr modules and utilities
@@ -23,7 +21,6 @@ from utils.config import load_config
 from utils.filesystem import get_raw_path, move_completed_file
 from utils.common import stop_flags, stop_flags_lock
 from modules.recording import start_recording, stop_recording
-
 
 def main():
     # parse command line arguments
@@ -75,7 +72,6 @@ def main():
             else:
                 os.environ['HEALTH_STATE'] = "true"
         time.sleep(60)
-
 
 if __name__ == '__main__':
     main()

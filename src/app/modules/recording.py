@@ -5,7 +5,6 @@ from utils.filesystem import get_output_path, get_raw_path, mkdir_dest, mkdir_ra
 from utils.logger import log_info, log_error
 from utils.common import stop_flags, stop_flags_lock
 
-
 def start_recording(cam_config, stop_flag):
     cam_name = cam_config['camera_name']
     cam_ip = cam_config['camera_ip']
@@ -48,7 +47,6 @@ def start_recording(cam_config, stop_flag):
             log_error(f"NVR: Error starting recording: {e.output}")
         except Exception as e:
             log_error(f"NVR: Error starting recording: {e}")
-
 
 def stop_recording(cam_name):
     with stop_flags_lock:
