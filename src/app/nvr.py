@@ -22,7 +22,6 @@ from utils.filesystem import get_raw_path, move_completed_file
 from utils.common import stop_flags, stop_flags_lock
 from modules.recording import start_recording, stop_recording
 
-
 def main():
     # parse command line arguments
     args = get_args()
@@ -73,7 +72,6 @@ def main():
             else:
                 os.environ['HEALTH_STATE'] = "true"
         time.sleep(60)
-
 
 if __name__ == '__main__':
     main()

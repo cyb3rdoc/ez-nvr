@@ -14,10 +14,8 @@ from utils.args import get_args
 from utils.logger import setup_logging, log_info, log_error, log_debug
 from utils.config import load_config
 
-
 def concat_enabled(config):
     return config.get("concatenation", True)
-
 
 def is_valid_filename(filename):
     try:
@@ -25,7 +23,6 @@ def is_valid_filename(filename):
         return True
     except ValueError:
         return False
-
 
 def concat_videos(cam_name):
     yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
@@ -73,7 +70,6 @@ def concat_videos(cam_name):
     except Exception as e:
         log_error(f"Concat: Error while removing video clips of {yesterday} for {cam_name}: {e}")
 
-
 def main():
     # parse command line arguments
     args = get_args()
@@ -98,7 +94,6 @@ def main():
     for camera in cameras:
         cam_name = camera['camera_name']
         concat_videos(cam_name)
-
 
 if __name__ == "__main__":
     main()

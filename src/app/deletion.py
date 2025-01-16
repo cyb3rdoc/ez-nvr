@@ -13,7 +13,6 @@ from utils.args import get_args
 from utils.logger import setup_logging, log_info, log_debug
 from utils.config import load_config
 
-
 def delete_old_folders(config):
     days_to_subtract = config.get("video_store", 15)
     cameras = config.get("cameras", [])
@@ -34,7 +33,6 @@ def delete_old_folders(config):
         else:
             log_info(f"Deletion: {camera_folder_path} not found")
 
-
 def main():
     # parse command line arguments
     args = get_args()
@@ -44,7 +42,6 @@ def main():
     config = load_config()
     log_debug("Deletion: Initializing deletion of old directories")
     delete_old_folders(config)
-
 
 if __name__ == "__main__":
     main()

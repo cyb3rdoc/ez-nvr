@@ -3,14 +3,12 @@
 import subprocess
 import os
 
-
 def process_state(process_name):
     try:
         output = subprocess.check_output(["pgrep", process_name])
         return len(output.strip()) > 0
     except subprocess.CalledProcessError:
         return False
-
 
 def nvr_health():
     health_state = os.environ.get('HEALTH_STATE', 'false')
@@ -19,7 +17,6 @@ def nvr_health():
     else:
         return True
 
-
 def main():
     nvr_process = process_state("python")
     ffmpeg_process = process_state("ffmpeg")
@@ -27,7 +24,6 @@ def main():
         return "OK"
     else:
         return "ERROR"
-
 
 if __name__ == "__main__":
     main()
