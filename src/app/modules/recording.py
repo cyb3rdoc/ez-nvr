@@ -23,7 +23,7 @@ def start_recording(cam_config, stop_flag):
         if stop_flag.is_set():
             break
 
-        response = os.system("ping -c 1 " + cam_ip)
+        response = os.system(f"ping -c 1 {cam_ip} > /dev/null 2>&1")
         if response == 0:
             log_info(f"NVR: Connection established to {cam_name} at {cam_ip}")
             break
